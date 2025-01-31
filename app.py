@@ -46,13 +46,14 @@ def listen():
         return "⚠️ Internet error"
 
 # ✅ Ollama API se Jawab lena
-def get_ollama_response(user_input):
+# ✅ DeepSeek API se Jawab lena
+def get_deepseek_response(user_input):
     payload = {
-        "model": "llama3.1:latest",
+        "model": "deepseek-r1:1.5b",  # Use the DeepSeek model for faster response
         "prompt": user_input,
         "stream": False,
         "max_tokens": 50,  # Short responses
-        "temperature": 0.7  # Controls randomness, 0.7 is balanced
+        "temperature": 0.7  # Balanced randomness
     }
     try:
         response = requests.post(OLLAMA_URL, json=payload)
@@ -60,11 +61,11 @@ def get_ollama_response(user_input):
             data = response.json()
             return data.get("response", "No response found.")
         else:
-            return f"⚠️ Ollama API ka response nahi aaya. Error: {response.status_code}"
+            return f"⚠️ DeepSeek API ka response nahi aaya. Error: {response.status_code}"
     except requests.exceptions.RequestException as e:
         return f"⚠️ API request error: {e}"
 
-
+# ✅ One by One Conversation Bot
 # ✅ One by One Conversation Bot
 def listen_and_respond():
     global bot_response
@@ -78,7 +79,7 @@ def listen_and_respond():
         else:
             user_input = listen()
             if user_input:
-                bot_response = get_ollama_response(user_input)
+                bot_response = get_deepseek_response(user_input)  # Changed to get_deepseek_response
                 speak(bot_response)
                 print(f"Bot: {bot_response}")
 
