@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Chatbot</title>
+</head>
+<body>
+    <h1>Welcome to the Speech Chatbot</h1>
+    <button id="micButton">Click to Speak</button>
+    <p id="userResponse"></p>
+    <p id="botResponse"></p>
+
+    <script>
+        document.getElementById('micButton').addEventListener('click', () => {
+            fetch('/chat', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('userResponse').textContent = "You: " + data.user;
+                    document.getElementById('botResponse').textContent = "Bot: " + data.bot;
+                });
+        });
+
+        // Polling every 2 seconds to get the latest bot response
+        setInterval(() => {
+            fetch('/get_response')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('botResponse').textContent = "Bot: " + data.bot;
+                });
+        }, 2000);
+    </script>
+</body>
+</html>
