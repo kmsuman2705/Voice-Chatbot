@@ -4,31 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speech Chatbot</title>
+    <style>
+        body {
+            background-color: #ff99cc; /* Soft Pink Background */
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-container {
+            width: 80%;
+            max-width: 400px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .message {
+            padding: 10px;
+            margin: 8px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .user {
+            background-color: #ff66b2;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .bot {
+            background-color: #f2f2f2;
+            align-self: flex-start;
+        }
+
+        #micButton {
+            background-color: #ff66b2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #micButton:hover {
+            background-color: #ff3385;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Welcome to the Speech Chatbot</h1>
-    <button id="micButton">Click to Speak</button>
-    <p id="userResponse"></p>
-    <p id="botResponse"></p>
+    <h1>🎤 Talk to Your Chatbot</h1>
+    <div class="chat-container" id="chatBox"></div>
+    <button id="micButton">🎙️ Click to Speak</button>
 
     <script>
         document.getElementById('micButton').addEventListener('click', () => {
             fetch('/chat', { method: 'POST' })
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('userResponse').textContent = "You: " + data.user;
-                    document.getElementById('botResponse').textContent = "Bot: " + data.bot;
+                    addMessage("You: " + data.user, "user");
+                    addMessage("Bot: " + data.bot, "bot");
                 });
         });
 
-        // Polling every 2 seconds to get the latest bot response
-        setInterval(() => {
-            fetch('/get_response')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('botResponse').textContent = "Bot: " + data.bot;
-                });
-        }, 2000);
+        function addMessage(text, type) {
+            const chatBox = document.getElementById("chatBox");
+            let message = document.createElement("div");
+            message.classList.add("message", type);
+            message.textContent = text;
+            chatBox.appendChild(message);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
     </script>
 </body>
 </html>
