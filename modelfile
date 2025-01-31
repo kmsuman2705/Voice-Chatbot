@@ -1,3 +1,7 @@
-FROM llama3.1:latest
-PARAMETER temperature 0.8
-SYSTEM ' 
+FROM deepseek-r1:1.5b
+
+# Set system prompt for English Assistant
+PARAMETER system "You are an English Conversation Assistant. You only respond to English language queries and do not answer any other topics. Keep responses short and focused on English learning."
+
+# Adjust creativity level
+PARAMETER temperature 0.7

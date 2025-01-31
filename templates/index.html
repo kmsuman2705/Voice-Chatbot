@@ -6,7 +6,7 @@
     <title>Speech Chatbot</title>
     <style>
         body {
-            background-color: #ff99cc; /* Soft Pink Background */
+            background-color: #ff99cc;
             font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
@@ -15,12 +15,7 @@
             height: 100vh;
             margin: 0;
         }
-
-        h1 {
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
+        h1 { color: white; }
         .chat-container {
             width: 80%;
             max-width: 400px;
@@ -31,41 +26,18 @@
             overflow-y: auto;
             max-height: 400px;
         }
-
-        .message {
-            padding: 10px;
-            margin: 8px;
-            border-radius: 10px;
-            max-width: 80%;
-        }
-
-        .user {
-            background-color: #ff66b2;
-            color: white;
-            align-self: flex-end;
-        }
-
-        .bot {
-            background-color: #f2f2f2;
-            align-self: flex-start;
-        }
-
+        .message { padding: 10px; margin: 8px; border-radius: 10px; max-width: 80%; }
+        .user { background-color: #ff66b2; color: white; }
+        .bot { background-color: #f2f2f2; }
         #micButton {
             background-color: #ff66b2;
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 25px;
-            font-size: 16px;
             cursor: pointer;
             margin-top: 10px;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
         }
-
-        #micButton:hover {
-            background-color: #ff3385;
-        }
-
     </style>
 </head>
 <body>
@@ -78,8 +50,16 @@
             fetch('/chat', { method: 'POST' })
                 .then(response => response.json())
                 .then(data => {
-                    addMessage("You: " + data.user, "user");
-                    addMessage("Bot: " + data.bot, "bot");
+                    if (data.user && data.bot) {
+                        addMessage(`You: ${data.user}`, "user");
+                        addMessage(`Bot: ${data.bot}`, "bot");
+                    } else {
+                        addMessage("Error: No response from the bot", "bot");
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                    addMessage("Network error, please try again!", "bot");
                 });
         });
 
